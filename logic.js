@@ -10,6 +10,7 @@ function displayResults(responseJson) {
         const item = responseJson.data[i];
         $("#results").append(`<h3>${item.name}</h3>
                 <p>${item.description}</p>
+                <img src=${item.images[0].url} alt="Image of Park"></img>
                 <a href=${item.url} alt="Website URL">${item.url}</a>`)
     }
     $("#results").removeClass("hidden");

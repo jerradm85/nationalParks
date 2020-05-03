@@ -5,6 +5,10 @@
   body {
     font-family: 'Roboto', sans-serif;
   }
+
+  img {
+    height: 300px;
+  }
   
   button, input {
     padding: 5px;

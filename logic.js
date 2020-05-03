@@ -1,48 +1,36 @@
 'use strict';
 
 const apiKey = 'GT08v6bQTrtSV2ij9z0xJggYCDf4AULoc4T5lIQ5';
-const searchURL = 'https://developer.nps.gov/api/v1/parks';
+const url = 'https://developer.nps.gov/api/v1/parks';
 
-function formatQueryParams(params) {
-    const queryItems = Object.keys(params)
-    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
-  return queryItems.join('&'); 
-}
 
 function displayResults(responseJson) {
-    console.log(responseJson.data);
-    $("#results").removeClass("hidden");
-    for(let i=0; i<responseJson.data.length; i++) {
+    $("#results").html("");
+    for(let i = 0; i < responseJson.data.length; i++){
         const item = responseJson.data[i];
-        $("#results ul").append(`
-        <div>
-            <p>${item.name}</p>
-        </div>
-        `)
+        $("#results").append(`<h3>${item.name}</h3>
+                <p>${item.description}</p>
+                <p>${item.url}</p>`)
     }
+    $("#results").removeClass("hidden");
 }
 
-function getParksData(searchTerm, maxResults) {
-    console.log(searchTerm, maxResults);
-    const query = formatQueryParams({
-        api_key: apiKey,
-        limit: maxResults,
-        stateCode: searchTerm
-    })
-    fetch(searchURL+"?"+query)
-    .then(res => res.json())
-    .then(data => {
-        displayResults(data);
-    })
+function getParksData(stateCode, limit) {
+
+    const apiQuery = `${url}?stateCode=${stateCode}&limit=${limit}&api_key=${apiKey}`;
+
+    fetch(apiQuery)
+    .then(response => response.json())
+    .then(responseJson => displayResults(responseJson))
 }
 
 function watchForm() {
-    $('#js-form').submit(event => {
-        event.preventDefault();
-        const searchTerm = $('#js-search').val();
-        const maxResults = $('#js-max-results').val();
-        getParksData(searchTerm, maxResults);
-    });
+    $('#form').submit(e => {
+        e.preventDefault();
+        const quantity = $("#js-max-results").val();
+        const state = $("#js-search").val();
+        getParksData(state, quantity);
+    })
 }
 
 $(watchForm);
